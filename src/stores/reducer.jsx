@@ -1,4 +1,4 @@
- import { ADD_PRODUCT, DELETE_PRODUCT, SELECT_PRODUCT, UPDATE_PRODUCT } from "./constant";
+ import { ADD_PRODUCT } from "./constant";
  
  const initState = [
         {
@@ -26,7 +26,7 @@
             info: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Molestias consectetur recusandae aliquam eveniet fugiat officiis dolor totam.'
         },
         {
-            id:3,
+            id:4,
             quantity: 1,
             img: '../images/iphone-14-pro-max-den-thumb-600x600.webp',
             name: 'iphone-14-pro-max',

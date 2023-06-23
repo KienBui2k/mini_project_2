@@ -6,3 +6,10 @@ export const addProduct = (product) => {
         payload: product
     }
 }
+export const deleteProduct = (id) => {
+    console.log(id);
+    return{
+        type: DELETE_PRODUCT,
+         payload: id
+    }
+}
