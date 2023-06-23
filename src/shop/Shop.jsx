@@ -4,12 +4,11 @@ import { useSelector } from 'react-redux'
 import Cart from './Component/Cart';
 
 export default function Shop() {
-    const storeProduct = useSelector((state) => state.cart)
-    const [CartStore, setCartStore] = useState(useSelector((state => state.productCart))) 
+    const store = useSelector((state) => state.store)
   return (
     <>
-        <ListProducts storeProduct={storeProduct} setCartStore={setCartStore}></ListProducts>
-        <Cart CartStore={CartStore} setCartStore={setCartStore}></Cart>
+        <ListProducts storeProduct={store.products}></ListProducts>
+        <Cart cartStore={store.cart}></Cart>
     </>
   )
 }

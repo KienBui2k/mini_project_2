@@ -1,42 +1,42 @@
-
 import Card from 'react-bootstrap/Card';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addProduct } from '../../stores/action';
 
-export default function ListProducts({ storeProduct, setCartStore }) {
+export default function ListProducts({ storeProduct }) {
   const dispatch = useDispatch();
+  const cart = JSON.parse(localStorage.getItem("listCart")) || [];
   const [productQuantity, setProductQuantity] = useState(storeProduct.map(() => 1));
-  const listProductsLocal = JSON.parse(localStorage.getItem("listCart")) || [];
 
   const handleChange = (index, event) => {
     const updatedQuantities = [...productQuantity];
     updatedQuantities[index] = parseInt(event.target.value);
     setProductQuantity(updatedQuantities);
   };
-
 const handleSubmit = (product, index) => {
   const quantity = productQuantity[index];
+
   if (quantity >= 1) {
-    const updatedProduct = { ...product, quantity: quantity };
-    let existingProducts = JSON.parse(localStorage.getItem('listCart')) || [];
-    let isProductExist = false;
+    const existingProductIndex = cart.findIndex(item => item.id === product.id);
 
-    for (let i = 0; i < existingProducts.length; i++) {
-      if (existingProducts[i].id === product.id) {
-        existingProducts[i].quantity += quantity;
-        isProductExist = true;
-        break;
-      }
+    if (existingProductIndex >= 0) {
+      const updatedCart = cart.map((item, i) => {
+        if (i === existingProductIndex) {
+          return {
+            ...item,
+            quantity: item.quantity + quantity
+          };
+        }
+        return item;
+      });
+
+      localStorage.setItem("listCart", JSON.stringify(updatedCart));
+      dispatch(addProduct(updatedCart[existingProductIndex]));
+    } else {
+      const newProduct = { ...product, quantity: quantity };
+      localStorage.setItem("listCart", JSON.stringify([...cart, newProduct]));
+      dispatch(addProduct(newProduct));
     }
-
-    if (!isProductExist) {
-      existingProducts.push(updatedProduct);
-    }
-    localStorage.setItem('listCart', JSON.stringify(existingProducts));
-
-    const newListProductsLocal = JSON.parse(localStorage.getItem('listCart'));
-    setCartStore(newListProductsLocal);
   }
 };
 

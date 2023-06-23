@@ -1,32 +1,16 @@
 
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { deleteProduct } from '../../stores/action';
+import { deleteProduct, selectedProduct } from '../../stores/action';
 
-export default function Cart({ CartStore, setCartStore}) {
+export default function Cart({ cartStore}) {
   const dispatch = useDispatch();
-  const DuplicateProducts = (cartItems) => {
-    const mergedCartItems = [];
 
-    cartItems.forEach((product) => {
-      const existingProduct = mergedCartItems.find(
-        (item) => item.id === product.id
-      );
-      if (existingProduct) {
-        existingProduct.quantity += product.quantity;
-      } else {
-        mergedCartItems.push({ ...product });
-      }
-    });
-    return mergedCartItems;
-  };
-
-  const newCartStore = DuplicateProducts(CartStore);
-  
   const handleDelete = (id) => {
-    dispatch(deleteProduct(id))
-    const updateDeleteNew = JSON.parse(localStorage.getItem('listCart'))
-    setCartStore(updateDeleteNew)
+  dispatch(deleteProduct(id));
+};
+  const handleEdit = (product) =>{
+      dispatch(selectedProduct(product))
   }
   return (
     <div className="cart__container">
@@ -43,7 +27,7 @@ export default function Cart({ CartStore, setCartStore}) {
           </tr>
         </thead>
         <tbody>
-          {newCartStore.map((product, index) => (
+          {cartStore.map((product, index) => (
             <tr key={product.id}>
               <td>{index + 1}</td>
               <td>{product.name}</td>
@@ -53,7 +37,7 @@ export default function Cart({ CartStore, setCartStore}) {
                 ${parseInt(product.price.replace('$', '')) * product.quantity}
               </td>
               <td>
-                <button>Edit</button>
+                <button onClick={() => handleEdit(product)}>Edit</button>
                 <button onClick={() => handleDelete(product.id)}>Delete</button>
               </td>
             </tr>

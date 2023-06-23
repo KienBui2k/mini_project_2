@@ -1,6 +1,6 @@
- import { ADD_PRODUCT } from "./constant";
+ import { ADD_PRODUCT, DELETE_PRODUCT } from "./constant";
  
- const initState = [
+ const listProducts = [
         {
             id:1,
             quantity: 1,
@@ -35,12 +35,32 @@
         },
  ]
 
+ const initState = {
+    products:listProducts,
+    cart:[]
+ }
+
  export const CartReducer = (state = initState, action ) => {
     switch(action.type)
     {
         case  ADD_PRODUCT:
-            return state;
+            
+            localStorage.setItem("listCart", JSON.stringify([...state.cart, action.payload]))
+            return {
+                ...state,
+                cart: [...state.cart, action.payload]
+
+            }
+        case DELETE_PRODUCT:
+            localStorage.setItem("listCart", JSON.stringify(state.cart.filter((product)=> product.id !==action.payload )))
+            return {
+                ...state,
+                cart: state.cart.filter((product)=> product.id !==action.payload )
+            }
         default: 
-            return state;
+            return {
+                ...state,
+                cart: JSON.parse(localStorage.getItem("listCart"))||[]
+            };
     }
 }

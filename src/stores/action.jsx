@@ -13,3 +13,17 @@ export const deleteProduct = (id) => {
          payload: id
     }
 }
+export const selectedProduct = (product) => {
+    console.log(product);
+    return{
+        type: SELECT_PRODUCT,
+         payload: product
+    }
+}
+export const updateEditProduct = (product) => {
+    console.log(product);
+    return{
+        type: UPDATE_PRODUCT,
+         payload: product
+    }
+}
