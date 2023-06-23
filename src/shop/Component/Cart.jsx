@@ -1,7 +1,7 @@
 import React from 'react'
-import { useSelector } from 'react-redux';
-export default function Cart() {
-  const {cartProducts} = useSelector(state => state.filter(product => product.quantity > 0)); 
+
+export default function Cart({CartStore}) {
+ 
   return (
     <div className='cart__container'>
        <h1>Your Cart</h1>
@@ -17,7 +17,7 @@ export default function Cart() {
            </tr>
          </thead>
          <tbody>
-           {cartProducts.map((product, index) => (
+           {CartStore.map((product, index) => (
              <tr key={product.id}>
                <td>{index + 1}</td>
                <td>{product.name}</td>

@@ -2,23 +2,22 @@
 import Card from 'react-bootstrap/Card';
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { addProduct } from '../../stores/reducer';
+import { addProduct } from '../../stores/action';
 export default function ListProducts({storeProduct}) {
     const dispatch= useDispatch();
   const [productQuantity, setProductQuantity] = useState(storeProduct.map(() => 1));
-
+    const listProductsLocal = JSON.parse(localStorage.getItem("listCart")) || [];
   const handleChange = (index, event) => {
     const updatedQuantities = [...productQuantity];
     updatedQuantities[index] = parseInt(event.target.value);
     setProductQuantity(updatedQuantities);
   };
-    const handleSubmit = (index,e) => {
-        e.preventDefault()
-    const selectedProduct = storeProduct[index];
-    const updatedProduct = { ...selectedProduct, quantity: productQuantity[index] };
-    dispatch(addProduct(updatedProduct));
-    console.log("🚀 ~ file: ListProducts.jsx:20 ~ handleSubmit ~ updatedProduct:", updatedProduct)
+    const handleSubmit = (product) => {
+        dispatch(addProduct(product))
+        listProductsLocal.push(product)
+        localStorage.setItem("listCart", JSON.stringify(listProductsLocal))
   };
+        
 
   return (
         <div className='product__main'>
@@ -39,7 +38,7 @@ export default function ListProducts({storeProduct}) {
                 <div className='product__action'>
                    <input type='number' value={productQuantity[index]} onChange={(e) => handleChange(index, e)} />
                     
-                    <button type='button' onClick={() => handleSubmit(index)}>Add To Cart</button>
+                    <button type='button' onClick={() => handleSubmit(product)}>Add To Cart</button>
                 </div>
             </div>
         ))}
