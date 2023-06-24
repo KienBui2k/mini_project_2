@@ -1,9 +1,9 @@
-import { ADD_PRODUCT, DELETE_PRODUCT, SELECT_PRODUCT, UPDATE_PRODUCT } from "./constant";
+import { ADD_PRODUCT, DELETE_PRODUCT, SELECT_PRODUCT, UPDATE_PRODUCT, UPDATE_PRODUCT_QUANTITY } from "./constant";
 
-export const addProduct = (product) => {
+export const addProduct = (payload) => {
     return {
         type: ADD_PRODUCT,
-        payload: product
+        payload: payload
     }
 }
 export const deleteProduct = (id) => {
@@ -27,3 +27,7 @@ export const updateEditProduct = (product) => {
          payload: product
     }
 }
+export const updateProductQuantity = (productId, newQuantity) => ({
+  type: UPDATE_PRODUCT_QUANTITY,
+  payload: { productId, newQuantity },
+});

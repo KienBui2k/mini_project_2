@@ -72,6 +72,14 @@
       border: 1px solid black;
       border-collapse: collapse;
 
+      .table__quantity {
+        width: 10%;
+        input {
+          width: 50%;
+          text-align: center;
+        }
+      }
+
       tr,
       th,
       td {

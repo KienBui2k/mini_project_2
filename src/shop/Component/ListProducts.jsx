@@ -1,44 +1,21 @@
 import Card from 'react-bootstrap/Card';
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+
+import { useDispatch } from 'react-redux';
 import { addProduct } from '../../stores/action';
 
 export default function ListProducts({ storeProduct }) {
   const dispatch = useDispatch();
-  const cart = JSON.parse(localStorage.getItem("listCart")) || [];
-  const [productQuantity, setProductQuantity] = useState(storeProduct.map(() => 1));
 
-  const handleChange = (index, event) => {
-    const updatedQuantities = [...productQuantity];
-    updatedQuantities[index] = parseInt(event.target.value);
-    setProductQuantity(updatedQuantities);
+
+
+  const formSubmit = (event, product) => {
+    event.preventDefault()
+      dispatch(addProduct({
+        product: product,
+        quantity:parseInt(event.target.quantity.value)
+      }))
   };
-const handleSubmit = (product, index) => {
-  const quantity = productQuantity[index];
 
-  if (quantity >= 1) {
-    const existingProductIndex = cart.findIndex(item => item.id === product.id);
-
-    if (existingProductIndex >= 0) {
-      const updatedCart = cart.map((item, i) => {
-        if (i === existingProductIndex) {
-          return {
-            ...item,
-            quantity: item.quantity + quantity
-          };
-        }
-        return item;
-      });
-
-      localStorage.setItem("listCart", JSON.stringify(updatedCart));
-      dispatch(addProduct(updatedCart[existingProductIndex]));
-    } else {
-      const newProduct = { ...product, quantity: quantity };
-      localStorage.setItem("listCart", JSON.stringify([...cart, newProduct]));
-      dispatch(addProduct(newProduct));
-    }
-  }
-};
 
   return (
     <div className='product__main'>
@@ -55,10 +32,10 @@ const handleSubmit = (product, index) => {
               <p>{product.price}</p>
             </Card.Body>
           </Card>
-          <div className='product__action'>
-            <input type='number' value={productQuantity[index]} onChange={(e) => handleChange(index, e)} />
-            <button type='button' onClick={() => handleSubmit(product, index)}>Add To Cart</button>
-          </div>
+          <form className='product__action' onSubmit={(e) => formSubmit(e, product) }>
+            <input type='number' name='quantity' defaultValue={1} />
+            <button type='submit'>Add To Cart</button>
+          </form>
         </div>
       ))}
     </div>

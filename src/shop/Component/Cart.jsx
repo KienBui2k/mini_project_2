@@ -1,10 +1,20 @@
 
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { deleteProduct, selectedProduct } from '../../stores/action';
+import { deleteProduct, selectedProduct,updateProductQuantity } from '../../stores/action';
 
-export default function Cart({ cartStore}) {
+export default function Cart({cartStore}) {
   const dispatch = useDispatch();
+
+
+  const handleQuantityChange = (event, productId) => {
+    const newQuantity = parseInt(event.target.value);
+    if (!isNaN(newQuantity) && newQuantity >= 0) {
+      dispatch(updateProductQuantity(productId, newQuantity));
+    }
+  };
+
+
 
   const handleDelete = (id) => {
   dispatch(deleteProduct(id));
@@ -32,13 +42,19 @@ export default function Cart({ cartStore}) {
               <td>{index + 1}</td>
               <td>{product.name}</td>
               <td>{product.price}</td>
-              <td>{product.quantity}</td>
+               <td className="table__quantity">
+                <input
+                  type="number"
+                  value={product.quantity}
+                  onChange={(e) => handleQuantityChange(e, product.id)}
+                />
+              </td>
               <td>
                 ${parseInt(product.price.replace('$', '')) * product.quantity}
               </td>
               <td>
-                <button onClick={() => handleEdit(product)}>Edit</button>
-                <button onClick={() => handleDelete(product.id)}>Delete</button>
+                <button onClick={() => handleEdit(product)}>Thanh toán</button>
+                <button onClick={() => handleDelete(product.id)}>Xóa</button>
               </td>
             </tr>
           ))}

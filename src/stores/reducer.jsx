@@ -1,4 +1,4 @@
- import { ADD_PRODUCT, DELETE_PRODUCT } from "./constant";
+ import { ADD_PRODUCT, DELETE_PRODUCT, UPDATE_PRODUCT_QUANTITY } from "./constant";
  
  const listProducts = [
         {
@@ -44,12 +44,30 @@
     switch(action.type)
     {
         case  ADD_PRODUCT:
-            
-            localStorage.setItem("listCart", JSON.stringify([...state.cart, action.payload]))
-            return {
-                ...state,
-                cart: [...state.cart, action.payload]
-
+            let temState = [...state.cart]
+            let check = temState.find((product) => product.id === action.payload.product.id)
+            if(!check){
+                temState.push({...action.payload.product, quantity: action.payload.quantity})
+                localStorage.setItem("listCart", JSON.stringify(temState))
+                return{
+                    ...state,
+                    cart: temState
+                }
+            }else{
+                temState.map((product) => {
+                    if(product.id == action.payload.product.id ){
+                       return product.quantity += action.payload.quantity;
+                    }
+                    else{
+                        return product
+                    } 
+                    }               
+                )
+                 localStorage.setItem("listCart", JSON.stringify(temState))
+                 return {
+                    ...state,
+                    cart : temState
+                 }
             }
         case DELETE_PRODUCT:
             localStorage.setItem("listCart", JSON.stringify(state.cart.filter((product)=> product.id !==action.payload )))
@@ -57,7 +75,25 @@
                 ...state,
                 cart: state.cart.filter((product)=> product.id !==action.payload )
             }
-        default: 
+
+
+        case UPDATE_PRODUCT_QUANTITY:
+            const { productId, newQuantity } = action.payload;
+            const updatedCart = state.cart.map((product) => {
+             if (product.id === productId) {
+             const updatedProduct = { ...product, quantity: newQuantity };
+                updatedProduct.total = parseInt(updatedProduct.price.replace('$', '')) * newQuantity;
+             return updatedProduct;
+            }
+        return product;
+
+        });
+        localStorage.setItem("listCart", JSON.stringify(updatedCart));
+        return {
+             ...state,
+            cart: updatedCart,
+        };
+             default: 
             return {
                 ...state,
                 cart: JSON.parse(localStorage.getItem("listCart"))||[]
